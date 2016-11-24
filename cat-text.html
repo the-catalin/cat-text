@@ -1,0 +1,250 @@
+<link rel="import" href="../polymer/polymer.html">
+
+
+<dom-module id="cat-text">
+    <style>
+        :host {          
+            display: inline-block;
+            position: relative;
+        }
+    </style>
+    
+    <template>
+        <div>
+            <content></content>
+        </div>
+    </template>
+    
+    <script>
+
+    (function(){
+
+    'use strict';
+
+    // the code ouside Polymer({}) is run once even for multiple component instances
+    var directions = {
+            'center': ['0', '0', '50% 50%'],
+            'top': ['1', '0', '100% 0%'],
+            'left': ['0', '1', '0% 100%'],
+            'bottom': ['1', '0', '100% 100%'],
+            'right': ['0', '1', '100% 100%']
+        },
+        possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+        possibleDirections = ['center', 'left', 'right', 'top', 'bottom'];
+
+    Polymer({
+
+        //local vars
+        useTransition : true,
+        useFade : false,
+        useScale : false,
+        useSlide : false,
+        transitionPropertyString : '',
+
+        is: 'cat-text',
+
+        properties: {
+            transitionType: {
+                type: String,
+                value: 'fade scale'
+            },
+            transitionDirection: {
+                type: String,
+                value: 'center'
+            },
+            transitionFunction: {
+                type: String,
+                value: 'ease'
+            },
+            transitionDuration: {
+                type: Number,
+                value: 1
+            },
+            transitionDelay: {
+                type: Number,
+                value: 0
+            },
+            slideOffset: {
+                type: String,
+                value: '100px'
+            },
+            visibleOnLoad: Boolean, //as opposed to visible on viewport
+            manuallyTriggered: Boolean
+        },
+
+        listeners: {
+            'show': 'showInfoText',
+            'hide': 'hideInfoText'
+        },
+
+        errorHandling: function() {
+            if (possibleFunctions.indexOf(this.transitionFunction) === -1) {
+                this.transitionFunction = 'ease';
+            }
+            if (possibleDirections.indexOf(this.transitionDirection) === -1) {
+                this.transitionDirection = 'center';
+            }
+        },
+
+        transitionTypeHandling: function() {
+            var types = this.transitionType.split(' ');
+            if (types.indexOf('none') > -1) {
+                this.useTransition = false;
+            } else {
+                if (types.indexOf('fade') > -1) this.useFade = true;
+                if (types.indexOf('scale') > -1) this.useScale = true;
+                if (types.indexOf('slide') > -1) this.useSlide = true;
+
+                if (!this.useFade && !this.useScale && !this.useSlide) {
+                    this.useTransition = false;
+                }                
+            }
+        },
+
+        // setting up initial values for css properties that use transitions
+        initialStyleSetup: function() {
+            if (this.useTransition) {
+
+                this.style.opacity = '0';
+
+                if (this.useScale) {                    
+                    this.style.transformOrigin = directions[this.transitionDirection][2];
+
+                    this.style.transform = 'scale3d(' +
+                        directions[this.transitionDirection][0]+', '+
+                        directions[this.transitionDirection][1] +', 1)';
+                }
+
+                if (this.useSlide) {
+                    if (this.transitionDirection === 'center') {
+                        this.transitionDirection = 'top';
+                    }
+                    this.style[this.transitionDirection] = '-' + this.slideOffset;
+                }
+            }
+        },
+
+        ready: function() {
+            this.errorHandling();        
+            this.transitionTypeHandling();            
+            this.initialStyleSetup();
+        },
+
+        // wrapping all style changes in a function in order to trigger it below either
+        // on visible in viewport or on page load
+        applyStyles: function() {
+            
+            this.style.transitionDuration = this.transitionDuration + 's';
+            this.style.transitionDelay = this.transitionDelay + 's';
+            
+            this.style.transitionFunction = this.transitionFunction;
+
+            this.transitionPropertyString = '';
+            this.style.opacity = 1;
+            
+            if (this.useFade) {
+                this.transitionPropertyString += ' opacity';
+            }
+            if (this.useScale) {
+                this.transitionPropertyString += ' transform';
+                this.style.transform = 'scale3d(1, 1, 1)';
+            }
+            if (this.useSlide) {
+                this.transitionPropertyString += ' top left right bottom';
+                
+                this.style.left = 0;
+                this.style.right = 0;              
+                this.style.top = 0;
+                this.style.bottom = 0;
+                if (this.transitionDirection === 'right') this.style.left = 'auto';
+                if (this.transitionDirection === 'bottom') this.style.top = 'auto';
+            }
+
+            this.transitionPropertyString = this.transitionPropertyString.trim().split(' ').join(',');
+
+            this.style.transitionProperty = this.transitionPropertyString;
+
+        },
+
+        showInfoText: function() {
+            var self = this;          
+
+            if (self.useTransition) {
+                if (!self.visibleOnLoad && !self.manuallyTriggered) {
+                    onVisibleOnce(self, parseInt(self.slideOffset), function() {
+                        self.applyStyles();
+                    });
+                } else {
+                    self.applyStyles();
+                }                
+
+            }
+        },
+
+        hideInfoText: function() {
+            var self = this;
+            if (this.useTransition) {
+
+                this.style.opacity = 0;
+                
+                if (this.useScale) {                    
+                    this.style.transformOrigin = directions[this.transitionDirection][2];
+
+                    this.style.transform = 'scale3d(' +
+                        directions[this.transitionDirection][0]+', '+
+                        directions[this.transitionDirection][1] +', 1)';
+                }
+
+                if (this.useSlide) {                    
+                    this.style[this.transitionDirection] = '-' + this.slideOffset;
+                }
+            }
+        },
+
+        attached: function() {
+            if (!this.manuallyTriggered) {
+                this.showInfoText();
+            }
+        }
+    });
+
+
+
+
+    // functions to check if an element is in the viewport
+    function isElementInViewport(el, offset) {       
+        var rect = el.getBoundingClientRect();
+        offset = offset ? offset : 0;
+        return (
+            rect.top >= -offset &&
+            rect.left >= -offset &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) +offset &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth) + offset
+        );
+    }
+
+    function onVisibleOnce(el, offset, callback) {            
+        var visibilityCheck = function() {
+            if (isElementInViewport(el, offset)) {
+                callback();
+                removeEventListener('DOMContentLoaded', visibilityCheck, false); 
+                removeEventListener('load', visibilityCheck, false); 
+                removeEventListener('scroll', visibilityCheck, false); 
+                removeEventListener('resize', visibilityCheck, false);
+            }
+        };
+
+        addEventListener('DOMContentLoaded', visibilityCheck, false); 
+        addEventListener('load', visibilityCheck, false); 
+        addEventListener('scroll', visibilityCheck, false); 
+        addEventListener('resize', visibilityCheck, false);
+
+        visibilityCheck();
+    }
+    //
+
+    })();
+
+    </script>
+
+</dom-module>
