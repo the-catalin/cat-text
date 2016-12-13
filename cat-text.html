@@ -42,11 +42,11 @@
         transitionPropertyString : '',
 
         is: 'cat-text',
-
+        
         properties: {
             transitionType: {
                 type: String,
-                value: 'fade scale'
+                value: 'scale'
             },
             transitionDirection: {
                 type: String,
@@ -65,11 +65,17 @@
                 value: 0
             },
             slideOffset: {
-                type: String,
-                value: '100px'
+                type: Number,
+                value: 100
             },
-            visibleOnLoad: Boolean, //as opposed to visible on viewport
-            manuallyTriggered: Boolean
+            visibleOnLoad: { //as opposed to visible on viewport
+                type: Boolean,
+                value: false
+            },
+            manuallyTriggered: {
+                type: Boolean,
+                value: false
+            }
         },
 
         listeners: {
@@ -93,7 +99,7 @@
             } else {
                 if (types.indexOf('fade') > -1) this.useFade = true;
                 if (types.indexOf('scale') > -1) this.useScale = true;
-                if (types.indexOf('slide') > -1) this.useSlide = true;
+                if (types.indexOf('slide') > -1) {this.useSlide = true; this.useFade = true;}
 
                 if (!this.useFade && !this.useScale && !this.useSlide) {
                     this.useTransition = false;
@@ -119,15 +125,9 @@
                     if (this.transitionDirection === 'center') {
                         this.transitionDirection = 'top';
                     }
-                    this.style[this.transitionDirection] = '-' + this.slideOffset;
+                    this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
                 }
             }
-        },
-
-        ready: function() {
-            this.errorHandling();        
-            this.transitionTypeHandling();            
-            this.initialStyleSetup();
         },
 
         // wrapping all style changes in a function in order to trigger it below either
@@ -135,9 +135,8 @@
         applyStyles: function() {
             
             this.style.transitionDuration = this.transitionDuration + 's';
-            this.style.transitionDelay = this.transitionDelay + 's';
-            
-            this.style.transitionFunction = this.transitionFunction;
+            this.style.transitionDelay = this.transitionDelay + 's';            
+            this.style.transitionTimingFunction = this.transitionFunction;
 
             this.transitionPropertyString = '';
             this.style.opacity = 1;
@@ -171,7 +170,7 @@
 
             if (self.useTransition) {
                 if (!self.visibleOnLoad && !self.manuallyTriggered) {
-                    onVisibleOnce(self, parseInt(self.slideOffset), function() {
+                    onVisibleOnce(self, self.slideOffset, function() {
                         self.applyStyles();
                     });
                 } else {
@@ -183,6 +182,9 @@
 
         hideInfoText: function() {
             var self = this;
+
+            this.style.transition = 'none';
+
             if (this.useTransition) {
 
                 this.style.opacity = 0;
@@ -196,12 +198,16 @@
                 }
 
                 if (this.useSlide) {                    
-                    this.style[this.transitionDirection] = '-' + this.slideOffset;
+                    this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
                 }
             }
         },
 
         attached: function() {
+            this.errorHandling();        
+            this.transitionTypeHandling();            
+            this.initialStyleSetup();
+
             if (!this.manuallyTriggered) {
                 this.showInfoText();
             }
