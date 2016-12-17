@@ -1,46 +1,16 @@
 <!doctype html>
 <html>
-<head>
-	<title>cat-text test</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-	<script src="../webcomponentsjs/webcomponents.min.js"></script>
+    <title>cat-text</title>
 
-	<link rel="import" href="cat-text.html">
-	<link rel="import" href="../cat-config-panel/cat-config-panel.html">
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
 
-	<style>	    
-	    cat-text {
-	    	background-color: rgba(150,200,0,0.5);
-            padding: 10px;
-            color: red;
-	    	font-family: 'Open Sans';
-	    	font-size:24px;
-	    }
-		
-	</style>
-
-</head>
-<body>
-<!-- 	<cat-text
-		transition-type="slide"
-		slide-offset="180"
-		transition-direction="left"
-		transition-duration="2"
-		transition-delay="0"
-		>Sample text
-	</cat-text> -->
-		<!-- visible-on-load
-		manually-triggered -->
-	
-	<cat-config-panel source-file="cat-text.json"></cat-config-panel>
-
-	<script src="../cat-config-panel/connecter.js"></script>
-
-	<script>
-		var componentString = '<cat-text>Sample text</cat-text>';
-			componentName = 'cat-text';
-
-		connectComponentWithConfigPanel(componentName, componentString);
-	</script>
-</body>
+    <link rel="import" href="../iron-component-page/iron-component-page.html">
+  </head>
+  <body>
+    <iron-component-page src="cat-text.html"></iron-component-page>
+  </body>
 </html>

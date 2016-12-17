@@ -4,7 +4,7 @@
     "Catalin Ungureanu <catalinungureanu@gmail.com>"
   ],
   "description": "",
-  "main": "",
+  "main": "cat-text.html",
   "license": "MIT",
   "homepage": "",
   "ignore": [
@@ -16,5 +16,11 @@
   ],
   "dependencies": {
     "polymer": "^1.7.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   }
 }

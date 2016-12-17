@@ -1,5 +1,12 @@
 <link rel="import" href="../polymer/polymer.html">
+<!--
+`cat-text` is an element that displays a text with a transition effect. Although the same appearance
+can be obtained with pure CSS transitions, the cat-text true power is revealed when used in conjunction
+with other elements, like `cat-image`
 
+@element cat-text
+@demo demo/index.html 
+-->
 
 <dom-module id="cat-text">
     <style>
@@ -34,44 +41,69 @@
 
     Polymer({
 
-        //local vars
-        useTransition : true,
-        useFade : false,
-        useScale : false,
-        useSlide : false,
-        transitionPropertyString : '',
+        //private vars
+        _useTransition : true,
+        _useFade : false,
+        _useScale : false,
+        _useSlide : false,
+        _transitionPropertyString : '',
 
         is: 'cat-text',
         
         properties: {
+            /**
+             * Available options: fade, slide, scale (or combined, space delimited)
+             */
             transitionType: {
                 type: String,
                 value: 'scale'
             },
+            /**
+             * Available options: center, left, right, top, bottom. 'center' is unavailable for transitionType: slide, 
+             */
             transitionDirection: {
                 type: String,
                 value: 'center'
             },
+            /**
+             * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
+             */
             transitionFunction: {
                 type: String,
                 value: 'ease'
             },
+            /**
+             * Easing duration, in seconds
+             */
             transitionDuration: {
                 type: Number,
                 value: 1
             },
+            /**
+             * Transition delay, in seconds
+             */
             transitionDelay: {
                 type: Number,
                 value: 0
             },
+            /**
+             * Available only for Transition type: slide
+             */
             slideOffset: {
                 type: Number,
                 value: 100
             },
+            /**
+             * By default, the text will appear only when it is in the viewport (visible area).
+             * Enable this if you want to make it visible on load.
+             */
             visibleOnLoad: { //as opposed to visible on viewport
                 type: Boolean,
                 value: false
             },
+            /**
+             * Enable this when you include cat-text in another component and you trigger the text appearance programatically (via showText())
+             */
             manuallyTriggered: {
                 type: Boolean,
                 value: false
@@ -79,11 +111,11 @@
         },
 
         listeners: {
-            'show': 'showInfoText',
-            'hide': 'hideInfoText'
+            'show': 'showText',
+            'hide': 'hideText'
         },
 
-        errorHandling: function() {
+        _errorHandling: function() {
             if (possibleFunctions.indexOf(this.transitionFunction) === -1) {
                 this.transitionFunction = 'ease';
             }
@@ -92,28 +124,28 @@
             }
         },
 
-        transitionTypeHandling: function() {
+        _transitionTypeHandling: function() {
             var types = this.transitionType.split(' ');
             if (types.indexOf('none') > -1) {
-                this.useTransition = false;
+                this._useTransition = false;
             } else {
-                if (types.indexOf('fade') > -1) this.useFade = true;
-                if (types.indexOf('scale') > -1) this.useScale = true;
-                if (types.indexOf('slide') > -1) {this.useSlide = true; this.useFade = true;}
+                if (types.indexOf('fade') > -1) this._useFade = true;
+                if (types.indexOf('scale') > -1) this._useScale = true;
+                if (types.indexOf('slide') > -1) {this._useSlide = true; this._useFade = true;}
 
-                if (!this.useFade && !this.useScale && !this.useSlide) {
-                    this.useTransition = false;
+                if (!this._useFade && !this._useScale && !this._useSlide) {
+                    this._useTransition = false;
                 }                
             }
         },
 
         // setting up initial values for css properties that use transitions
-        initialStyleSetup: function() {
-            if (this.useTransition) {
+        _initialStyleSetup: function() {
+            if (this._useTransition) {
 
                 this.style.opacity = '0';
 
-                if (this.useScale) {                    
+                if (this._useScale) {                    
                     this.style.transformOrigin = directions[this.transitionDirection][2];
 
                     this.style.transform = 'scale3d(' +
@@ -121,7 +153,7 @@
                         directions[this.transitionDirection][1] +', 1)';
                 }
 
-                if (this.useSlide) {
+                if (this._useSlide) {
                     if (this.transitionDirection === 'center') {
                         this.transitionDirection = 'top';
                     }
@@ -132,24 +164,24 @@
 
         // wrapping all style changes in a function in order to trigger it below either
         // on visible in viewport or on page load
-        applyStyles: function() {
+        _applyStyles: function() {
             
             this.style.transitionDuration = this.transitionDuration + 's';
             this.style.transitionDelay = this.transitionDelay + 's';            
             this.style.transitionTimingFunction = this.transitionFunction;
 
-            this.transitionPropertyString = '';
+            this._transitionPropertyString = '';
             this.style.opacity = 1;
             
-            if (this.useFade) {
-                this.transitionPropertyString += ' opacity';
+            if (this._useFade) {
+                this._transitionPropertyString += ' opacity';
             }
-            if (this.useScale) {
-                this.transitionPropertyString += ' transform';
+            if (this._useScale) {
+                this._transitionPropertyString += ' transform';
                 this.style.transform = 'scale3d(1, 1, 1)';
             }
-            if (this.useSlide) {
-                this.transitionPropertyString += ' top left right bottom';
+            if (this._useSlide) {
+                this._transitionPropertyString += ' top left right bottom';
                 
                 this.style.left = 0;
                 this.style.right = 0;              
@@ -159,37 +191,37 @@
                 if (this.transitionDirection === 'bottom') this.style.top = 'auto';
             }
 
-            this.transitionPropertyString = this.transitionPropertyString.trim().split(' ').join(',');
+            this._transitionPropertyString = this._transitionPropertyString.trim().split(' ').join(',');
 
-            this.style.transitionProperty = this.transitionPropertyString;
+            this.style.transitionProperty = this._transitionPropertyString;
 
         },
 
-        showInfoText: function() {
+        showText: function() {
             var self = this;          
 
-            if (self.useTransition) {
+            if (self._useTransition) {
                 if (!self.visibleOnLoad && !self.manuallyTriggered) {
                     onVisibleOnce(self, self.slideOffset, function() {
-                        self.applyStyles();
+                        self._applyStyles();
                     });
                 } else {
-                    self.applyStyles();
+                    self._applyStyles();
                 }                
 
             }
         },
 
-        hideInfoText: function() {
+        hideText: function() {
             var self = this;
 
             this.style.transition = 'none';
 
-            if (this.useTransition) {
+            if (this._useTransition) {
 
                 this.style.opacity = 0;
                 
-                if (this.useScale) {                    
+                if (this._useScale) {                    
                     this.style.transformOrigin = directions[this.transitionDirection][2];
 
                     this.style.transform = 'scale3d(' +
@@ -197,19 +229,19 @@
                         directions[this.transitionDirection][1] +', 1)';
                 }
 
-                if (this.useSlide) {                    
+                if (this._useSlide) {                    
                     this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
                 }
             }
         },
 
         attached: function() {
-            this.errorHandling();        
-            this.transitionTypeHandling();            
-            this.initialStyleSetup();
+            this._errorHandling();        
+            this._transitionTypeHandling();            
+            this._initialStyleSetup();
 
             if (!this.manuallyTriggered) {
-                this.showInfoText();
+                this.showText();
             }
         }
     });
