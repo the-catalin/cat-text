@@ -210,6 +210,13 @@ with other elements, like `cat-image`
                 }                
 
             }
+
+            /**
+             * Fired when the text is shown
+             *
+             * @event shown
+             */
+            this.fire('shown');
         },
 
         hideText: function() {
@@ -233,6 +240,13 @@ with other elements, like `cat-image`
                     this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
                 }
             }
+
+            /**
+             * Fired when the text is hidden
+             *
+             * @event hidden
+             */
+            this.fire('hidden');
         },
 
         attached: function() {

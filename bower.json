@@ -1,12 +1,19 @@
 {
   "name": "cat-text",
+  "version": "0.5.1",
+  "description": "Displays text with a transition effect",
   "authors": [
     "Catalin Ungureanu <catalinungureanu@gmail.com>"
   ],
-  "description": "",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "text",
+    "effect"
+  ],
   "main": "cat-text.html",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/the-catalin/cat-text",
   "ignore": [
     "**/.*",
     "node_modules",
