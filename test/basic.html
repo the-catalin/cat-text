@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+	<title>cat-text tests</title>
+	<meta charset="utf-8">
+
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+	<script src="../../web-component-tester/browser.js"></script>
+	
+	<link rel="import" href="../cat-text.html">
+</head>
+<body>
+
+	<test-fixture id="default-scale">
+		<template>
+			<cat-text></cat-text>
+		</template>
+	</test-fixture>
+
+	<test-fixture id="slide">
+		<template>
+			<cat-text transition-type="slide"></cat-text>
+		</template>
+	</test-fixture>
+
+	<test-fixture id="fade">
+		<template>
+			<cat-text transition-type="fade"></cat-text>
+		</template>
+	</test-fixture>
+
+	<test-fixture id="none">
+		<template>
+			<cat-text transition-type="none"></cat-text>
+		</template>
+	</test-fixture>
+
+	<script>
+		suite('basic', function() {
+
+			test('scale transition type is properly set', function(done) {
+				var f = fixture('default-scale');
+
+				Polymer.Base.async(function() {
+					assert.equal(f._useTransition, true);
+					
+					expect(f._useFade).to.be.equal(false);
+					expect(f._useScale).to.be.equal(true);
+					expect(f._useSlide).to.be.equal(false);
+					expect(f._transitionPropertyString).to.be.equal('transform');
+					
+					done();
+				});
+			});
+
+			test('slide transition type is properly set', function(done) {
+				var f = fixture('slide');
+
+				Polymer.Base.async(function() {
+					assert.equal(f._useTransition, true);
+					
+					expect(f._useFade).to.be.equal(true);
+					expect(f._useScale).to.be.equal(false);
+					expect(f._useSlide).to.be.equal(true);
+					expect(f._transitionPropertyString).to.be.equal('opacity,top,left,right,bottom');
+					
+					done();
+				});
+			});
+
+			test('fade transition type is properly set', function(done) {
+				var f = fixture('fade');
+
+				Polymer.Base.async(function() {
+					assert.equal(f._useTransition, true);
+					
+					expect(f._useFade).to.be.equal(true);
+					expect(f._useScale).to.be.equal(false);
+					expect(f._useSlide).to.be.equal(false);
+					expect(f._transitionPropertyString).to.be.equal('opacity');
+					
+					done();
+				});
+			});
+
+			test('"none" transition type is properly set', function(done) {
+				var f = fixture('none');
+
+				Polymer.Base.async(function() {
+					assert.equal(f._useTransition, false);
+					
+					expect(f._useFade).to.be.equal(false);
+					expect(f._useScale).to.be.equal(false);
+					expect(f._useSlide).to.be.equal(false);
+					expect(f._transitionPropertyString).to.be.equal('');
+					
+					done();
+				});
+			});
+		});
+	</script>	
+
+</body>
+</html>

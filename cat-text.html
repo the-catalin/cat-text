@@ -52,7 +52,7 @@ with other elements, like `cat-image`
         
         properties: {
             /**
-             * Available options: fade, slide, scale (or combined, space delimited)
+             * Available options: fade, slide, scale (or combined, space delimited), none
              */
             transitionType: {
                 type: String,
@@ -141,9 +141,10 @@ with other elements, like `cat-image`
 
         // setting up initial values for css properties that use transitions
         _initialStyleSetup: function() {
+            this.style.opacity = '0';
+
             if (this._useTransition) {
 
-                this.style.opacity = '0';
 
                 if (this._useScale) {                    
                     this.style.transformOrigin = directions[this.transitionDirection][2];
@@ -208,7 +209,8 @@ with other elements, like `cat-image`
                 } else {
                     self._applyStyles();
                 }                
-
+            } else {
+                self._applyStyles();
             }
 
             /**

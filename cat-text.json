@@ -7,7 +7,7 @@
         "name": "Transition Type",
         "id": "transitionType",
         "type": "dropdown",
-        "options": ["fade", "scale", "slide"]
+        "options": ["fade", "scale", "slide", "none"]
     }, {
         "name": "Transition Direction",
         "id": "transitionDirection",
@@ -58,11 +58,11 @@
 }, {
     "limits" : [{
         "master": "transitionType",
-        "slave": "transitionDirection",
+        "slave": ["transitionDirection"],
         "disabled": ["fade"]
     }, {
         "master": "transitionType",
-        "slave": "slideOffset",
+        "slave": ["slideOffset"],
         "disabled": ["fade", "scale"]
     }]
 }]
