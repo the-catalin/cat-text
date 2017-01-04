@@ -2,7 +2,7 @@
 
 # &lt;cat-text&gt;
 
-`<cat-text>` is a [Polymer](https://github.com/Polymer/polymer) element that displays a text with a transition effect. Although the same appearance can be obtained with pure CSS transitions, the cat-text true power is revealed when used in conjunction with other elements, like [&lt;cat-image&gt;](https://github.com/the-catalin/cat-image)
+`<cat-text>` is a [Polymer](https://github.com/Polymer/polymer) element that displays a text with a transition effect. Although the same appearance can be obtained with pure CSS transitions, the `<cat-text>` true power is revealed when used in conjunction with other elements, like [&lt;cat-image&gt;](https://github.com/the-catalin/cat-image)
 
 ## Short example:
 
