@@ -4,6 +4,28 @@
 
 `cat-text` is a [Polymer](https://github.com/Polymer/polymer) element that displays a text with a transition effect. Although the same appearance can be obtained with pure CSS transitions, the cat-text true power is revealed when used in conjunction with other elements, like [cat-image](https://github.com/the-catalin/cat-image)
 
+## Short example:
+
+<!--
+```
+<custom-element-demo>
+  <template>  	
+    <link rel="import" href="cat-text.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<cat-text
+	transition-type="slide"
+	slide-offset="180"
+	transition-direction="right"
+	transition-duration="1"
+	transition-delay="0">
+	This is a sample text
+</cat-text>
+```
 
 ## Install
 
