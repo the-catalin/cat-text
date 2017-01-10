@@ -3,18 +3,19 @@
 <head>
 	<title>cat-text test</title>
 
-	<script src="../webcomponentsjs/webcomponents.min.js"></script>
+	<script src="../../webcomponentsjs/webcomponents.min.js"></script>
 
-	<link rel="import" href="cat-text.html">
-	<link rel="import" href="../cat-config-panel/cat-config-panel.html">
+	<link rel="import" href="../cat-text.html">
+	<link rel="import" href="../../cat-config-panel/cat-config-panel.html">
 
 	<style>	    
 	    cat-text {
-	    	background-color: rgba(150,200,0,0.5);
+	    	background-color: rgba(150,190,200,1);
+	    	border-radius: 4px;
             padding: 10px;
-            color: red;
 	    	font-family: 'Open Sans';
 	    	font-size:24px;
+	    	margin: 30px;
 	    }
 		
 	</style>
@@ -32,9 +33,9 @@
 		<!-- visible-on-load
 		manually-triggered -->
 	
-	<cat-config-panel source-file="cat-text.json"></cat-config-panel>
+	<cat-config-panel source-file="../cat-text.json"></cat-config-panel>
 
-	<script src="../cat-config-panel/connecter.js"></script>
+	<script src="../../cat-config-panel/connecter.js"></script>
 
 	<script>
 		var componentString = '<cat-text>This is a sample text</cat-text>';
