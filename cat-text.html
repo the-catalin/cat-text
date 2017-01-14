@@ -10,7 +10,7 @@ with other elements, like `<cat-image>`
 
 <dom-module id="cat-text">
     <style>
-        :host {          
+        :host {
             display: inline-block;
             position: relative;
         }
@@ -141,6 +141,20 @@ with other elements, like `<cat-image>`
 
         // setting up initial values for css properties that use transitions
         _initialStyleSetup: function() {
+
+            /* because IE and FF shows the element's content before the element is initialized
+               as described here http://stackoverflow.com/questions/41619535/polymer-hidden-content-shows-up-for-a-second-upon-init
+               So we are forced to put a 'display: none' on this element wherever it is used
+               like this:
+               cat-text {
+                    display: none;
+               }
+
+               Below, after initialization, it is displayed:
+             */    
+            this.style.display = 'inline-block';
+
+
             this.style.opacity = '0';
 
             if (this._useTransition) {
@@ -199,7 +213,8 @@ with other elements, like `<cat-image>`
         },
 
         showText: function() {
-            var self = this;          
+
+            var self = this;
 
             if (self._useTransition) {
                 if (!self.visibleOnLoad && !self.manuallyTriggered) {
@@ -222,7 +237,6 @@ with other elements, like `<cat-image>`
         },
 
         hideText: function() {
-            var self = this;
 
             this.style.transition = 'none';
 
