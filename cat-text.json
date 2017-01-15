@@ -46,10 +46,10 @@
         "type": "toggle",
         "tip": "By default the text will appear only when it is in the viewport (visible area). If you don't want this, check to make it visible on load"
     }, {
-        "name": "Manually Triggered",
-        "id": "manuallyTriggered",
+        "name": "Manual Mode",
+        "id": "manualMode",
         "type": "toggle",
-        "tip": "(Advanced) Enable it when you include this in another component and you want to trigger text appearance programatically"
+        "tip": "(Advanced) Enable this if you want to manually control when cat-text is shown or hidden"
     }]
 }, {
     "tabName": "Publish",

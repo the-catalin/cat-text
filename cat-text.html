@@ -102,9 +102,9 @@ with other elements, like `<cat-image>`
                 value: false
             },
             /**
-             * Enable this when you include cat-text in another component and you trigger the text appearance programatically (via showText())
+             * Set this to true if you want to manually control when cat-text is shown or hidden (via showText() and hideText())
              */
-            manuallyTriggered: {
+            manualMode: {
                 type: Boolean,
                 value: false
             }
@@ -217,7 +217,7 @@ with other elements, like `<cat-image>`
             var self = this;
 
             if (self._useTransition) {
-                if (!self.visibleOnLoad && !self.manuallyTriggered) {
+                if (!self.visibleOnLoad && !self.manualMode) {
                     onVisibleOnce(self, self.slideOffset, function() {
                         self._applyStyles();
                     });
@@ -270,7 +270,7 @@ with other elements, like `<cat-image>`
             this._transitionTypeHandling();            
             this._initialStyleSetup();
 
-            if (!this.manuallyTriggered) {
+            if (!this.manualMode) {
                 this.showText();
             }
         }
