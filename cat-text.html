@@ -1,4 +1,10 @@
 <link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+
+<link rel="import" href="../cat-neon-animations/cat-neon-animations.html">
 <!--
 `<cat-text>` is an element that displays a text with a transition effect. Although the same appearance
 can be obtained with pure CSS transitions, the cat-text true power is revealed when used in conjunction
@@ -11,7 +17,7 @@ with other elements, like `<cat-image>`
 <dom-module id="cat-text">
     <style>
         :host {
-            display: inline-block;
+            /*display: inline-block;*/
             position: relative;
         }
     </style>
@@ -29,14 +35,8 @@ with other elements, like `<cat-image>`
     'use strict';
 
     // the code ouside Polymer({}) is run once even for multiple component instances
-    var directions = {
-            'center': ['0', '0', '50% 50%'],
-            'top': ['1', '0', '100% 0%'],
-            'left': ['0', '1', '0% 100%'],
-            'bottom': ['1', '0', '100% 100%'],
-            'right': ['0', '1', '100% 100%']
-        },
-        possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+
+    var possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
         possibleDirections = ['center', 'left', 'right', 'top', 'bottom'];
 
     Polymer({
@@ -49,8 +49,15 @@ with other elements, like `<cat-image>`
         _transitionPropertyString : '',
 
         is: 'cat-text',
-        
+
+        behaviors: [Polymer.NeonAnimationRunnerBehavior],
+
         properties: {
+            animationConfig: {
+                value: function() {
+                    return {};
+                }
+            },
             /**
              * Available options: fade, slide, scale (or combined, space delimited), none
              */
@@ -87,7 +94,7 @@ with other elements, like `<cat-image>`
                 value: 0
             },
             /**
-             * Available only for Transition type: slide
+             * Percentage offset. Available only for Transition type: slide
              */
             slideOffset: {
                 type: Number,
@@ -139,7 +146,6 @@ with other elements, like `<cat-image>`
             }
         },
 
-        // setting up initial values for css properties that use transitions
         _initialStyleSetup: function() {
 
             /* because IE and FF shows the element's content before the element is initialized
@@ -151,81 +157,70 @@ with other elements, like `<cat-image>`
                }
 
                Below, after initialization, it is displayed:
-             */    
+             */
             this.style.display = 'inline-block';
 
+            this.style.visibility = 'hidden';
 
-            this.style.opacity = '0';
+            var entry = [], timing, name;
 
-            if (this._useTransition) {
+            timing = {
+                duration: this.transitionDuration * 1000,
+                delay: this.transitionDelay * 1000,
+                easing: this.transitionFunction
+            };
 
-
-                if (this._useScale) {                    
-                    this.style.transformOrigin = directions[this.transitionDirection][2];
-
-                    this.style.transform = 'scale3d(' +
-                        directions[this.transitionDirection][0]+', '+
-                        directions[this.transitionDirection][1] +', 1)';
-                }
-
-                if (this._useSlide) {
-                    if (this.transitionDirection === 'center') {
-                        this.transitionDirection = 'top';
-                    }
-                    this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
-                }
-            }
-        },
-
-        // wrapping all style changes in a function in order to trigger it below either
-        // on visible in viewport or on page load
-        _applyStyles: function() {
-            
-            this.style.transitionDuration = this.transitionDuration + 's';
-            this.style.transitionDelay = this.transitionDelay + 's';            
-            this.style.transitionTimingFunction = this.transitionFunction;
-
-            this._transitionPropertyString = '';
-            this.style.opacity = 1;
-            
             if (this._useFade) {
-                this._transitionPropertyString += ' opacity';
+                entry.push({
+                    name: 'fade-in-animation',
+                    node: this,
+                    timing: timing
+                });
             }
             if (this._useScale) {
-                this._transitionPropertyString += ' transform';
-                this.style.transform = 'scale3d(1, 1, 1)';
+                entry.push({
+                    name: 'cat-scale-up-animation',
+                    node: this,
+                    timing: timing,
+                    direction: this.transitionDirection
+                });
             }
             if (this._useSlide) {
-                this._transitionPropertyString += ' top left right bottom';
-                
-                this.style.left = 0;
-                this.style.right = 0;              
-                this.style.top = 0;
-                this.style.bottom = 0;
-                if (this.transitionDirection === 'right') this.style.left = 'auto';
-                if (this.transitionDirection === 'bottom') this.style.top = 'auto';
+                if (this.transitionDirection === 'center') {
+                    this.transitionDirection = 'left';
+                }            
+                entry.push({
+                    name: 'cat-slide-in-animation',
+                    node: this,
+                    timing: timing,
+                    direction: this.transitionDirection,
+                    offset: this.slideOffset
+                });
             }
-
-            this._transitionPropertyString = this._transitionPropertyString.trim().split(' ').join(',');
-
-            this.style.transitionProperty = this._transitionPropertyString;
-
+            
+            this.animationConfig.entry = entry;
+            
         },
+        
 
         showText: function() {
-
-            var self = this;
-
-            if (self._useTransition) {
-                if (!self.visibleOnLoad && !self.manualMode) {
-                    onVisibleOnce(self, self.slideOffset, function() {
-                        self._applyStyles();
-                    });
+           
+            if (this._useTransition) {
+                if (!this.visibleOnLoad && !this.manualMode) {
+                    onVisibleOnce(this, this.slideOffset, function() {
+                        this.style.visibility = 'visible';
+                        this.cancelAnimation();
+                        this.playAnimation('entry');
+                    }, this);
                 } else {
-                    self._applyStyles();
+                    this.style.visibility = 'visible';
+                    this.cancelAnimation();
+                    this.playAnimation('entry');
                 }                
             } else {
-                self._applyStyles();
+                this.style.visibility = 'visible';
+                this.cancelAnimation();
+                this.playAnimation('entry');
             }
 
             /**
@@ -238,25 +233,8 @@ with other elements, like `<cat-image>`
 
         hideText: function() {
 
-            this.style.transition = 'none';
-
-            if (this._useTransition) {
-
-                this.style.opacity = 0;
-                
-                if (this._useScale) {                    
-                    this.style.transformOrigin = directions[this.transitionDirection][2];
-
-                    this.style.transform = 'scale3d(' +
-                        directions[this.transitionDirection][0]+', '+
-                        directions[this.transitionDirection][1] +', 1)';
-                }
-
-                if (this._useSlide) {                    
-                    this.style[this.transitionDirection] = '-' + this.slideOffset + 'px';
-                }
-            }
-
+            this.style.visibility = 'hidden';
+            
             /**
              * Fired when the text is hidden
              *
@@ -291,10 +269,10 @@ with other elements, like `<cat-image>`
         );
     }
 
-    function onVisibleOnce(el, offset, callback) {            
+    function onVisibleOnce(el, offset, callback, scope) {
         var visibilityCheck = function() {
             if (isElementInViewport(el, offset)) {
-                callback();
+                callback.call(scope);
                 removeEventListener('DOMContentLoaded', visibilityCheck, false); 
                 removeEventListener('load', visibilityCheck, false); 
                 removeEventListener('scroll', visibilityCheck, false); 
