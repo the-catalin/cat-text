@@ -1,11 +1,11 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
-<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
-<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../cat-animation/cat-animation-runner-behavior.html">
+<link rel="import" href="../cat-animation/animations/cat-slide-animation.html">
+<link rel="import" href="../cat-animation/animations/cat-fade-animation.html">
+<link rel="import" href="../cat-animation/animations/cat-scale-animation.html">
 
-<link rel="import" href="../cat-neon-animations/cat-slide-in-animation.html">
-<link rel="import" href="../cat-neon-animations/cat-scale-up-animation.html">
+<link rel="import" href="../cat-utils/cat-visibility-check.html">
 <!--
 `<cat-text>` is an element that displays a text with a transition effect. Although the same appearance
 can be obtained with pure CSS transitions, the cat-text true power is revealed when used in conjunction
@@ -16,282 +16,242 @@ with other elements, like `<cat-image>`
 -->
 
 <dom-module id="cat-text">
-    <style>
-        :host {
-            /*display: inline-block;*/
-            position: relative;
+<style>
+    :host {
+        /*display: inline-block;*/
+    }
+</style>
+
+<template>
+    <div>
+        <content></content>
+    </div>
+</template>
+
+<script>
+
+(function(){
+
+'use strict';
+
+// the code ouside Polymer({}) is run once even for multiple component instances
+
+var possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+    possibleDirections = ['center', 'left', 'right', 'top', 'bottom'];
+
+Polymer({
+
+    //private vars
+    _useTransition : true,
+    _useFade : false,
+    _useScale : false,
+    _useSlide : false,
+    _transitionPropertyString : '',
+
+    is: 'cat-text',
+
+    behaviors: [Polymer.CatAnimationRunnerBehavior],
+
+    properties: {
+        animationConfig: {
+            value: function() {
+                return {};
+            }
+        },
+        /**
+         * Available options: fade, slide, scale (or combined, space delimited), none
+         */
+        transitionType: {
+            type: String,
+            value: 'scale'
+        },
+        /**
+         * Available options: center, left, right, top, bottom. 'center' is unavailable for transitionType: slide, 
+         */
+        transitionDirection: {
+            type: String,
+            value: 'center'
+        },
+        /**
+         * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
+         */
+        transitionFunction: {
+            type: String,
+            value: 'ease'
+        },
+        /**
+         * Easing duration, in seconds
+         */
+        transitionDuration: {
+            type: Number,
+            value: 1
+        },
+        /**
+         * Transition delay, in seconds
+         */
+        transitionDelay: {
+            type: Number,
+            value: 0
+        },
+        /**
+         * Percentage offset. Available only for Transition type: slide
+         */
+        slideOffset: {
+            type: Number,
+            value: 100
+        },
+        /**
+         * By default, the text will appear only when it is in the viewport (visible area).
+         * Enable this if you want to make it visible on load.
+         */
+        visibleOnLoad: { //as opposed to visible on viewport
+            type: Boolean,
+            value: false
+        },
+        /**
+         * Set this to true if you want to manually control when cat-text is shown or hidden (via showText() and hideText())
+         */
+        manualMode: {
+            type: Boolean,
+            value: false
         }
-    </style>
-    
-    <template>
-        <div>
-            <content></content>
-        </div>
-    </template>
-    
-    <script>
+    },
 
-    (function(){
+    listeners: {
+        'show': 'showText',
+        'hide': 'hideText'
+    },
 
-    'use strict';
+    _errorHandling: function() {
+        if (possibleFunctions.indexOf(this.transitionFunction) === -1) {
+            this.transitionFunction = 'ease';
+        }
+        if (possibleDirections.indexOf(this.transitionDirection) === -1) {
+            this.transitionDirection = 'center';
+        }
+    },
 
-    // the code ouside Polymer({}) is run once even for multiple component instances
+    _transitionTypeHandling: function() {
+        var types = this.transitionType.split(' ');
+        if (types.indexOf('none') > -1) {
+            this._useTransition = false;
+        } else {
+            if (types.indexOf('fade') > -1) this._useFade = true;
+            if (types.indexOf('scale') > -1) {this._useScale = true; this._useFade = true;}
+            if (types.indexOf('slide') > -1) {this._useSlide = true; this._useFade = true;}
 
-    var possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
-        possibleDirections = ['center', 'left', 'right', 'top', 'bottom'];
-
-    Polymer({
-
-        //private vars
-        _useTransition : true,
-        _useFade : false,
-        _useScale : false,
-        _useSlide : false,
-        _transitionPropertyString : '',
-
-        is: 'cat-text',
-
-        behaviors: [Polymer.NeonAnimationRunnerBehavior],
-
-        properties: {
-            animationConfig: {
-                value: function() {
-                    return {};
-                }
-            },
-            /**
-             * Available options: fade, slide, scale (or combined, space delimited), none
-             */
-            transitionType: {
-                type: String,
-                value: 'scale'
-            },
-            /**
-             * Available options: center, left, right, top, bottom. 'center' is unavailable for transitionType: slide, 
-             */
-            transitionDirection: {
-                type: String,
-                value: 'center'
-            },
-            /**
-             * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
-             */
-            transitionFunction: {
-                type: String,
-                value: 'ease'
-            },
-            /**
-             * Easing duration, in seconds
-             */
-            transitionDuration: {
-                type: Number,
-                value: 1
-            },
-            /**
-             * Transition delay, in seconds
-             */
-            transitionDelay: {
-                type: Number,
-                value: 0
-            },
-            /**
-             * Percentage offset. Available only for Transition type: slide
-             */
-            slideOffset: {
-                type: Number,
-                value: 100
-            },
-            /**
-             * By default, the text will appear only when it is in the viewport (visible area).
-             * Enable this if you want to make it visible on load.
-             */
-            visibleOnLoad: { //as opposed to visible on viewport
-                type: Boolean,
-                value: false
-            },
-            /**
-             * Set this to true if you want to manually control when cat-text is shown or hidden (via showText() and hideText())
-             */
-            manualMode: {
-                type: Boolean,
-                value: false
-            }
-        },
-
-        listeners: {
-            'show': 'showText',
-            'hide': 'hideText'
-        },
-
-        _errorHandling: function() {
-            if (possibleFunctions.indexOf(this.transitionFunction) === -1) {
-                this.transitionFunction = 'ease';
-            }
-            if (possibleDirections.indexOf(this.transitionDirection) === -1) {
-                this.transitionDirection = 'center';
-            }
-        },
-
-        _transitionTypeHandling: function() {
-            var types = this.transitionType.split(' ');
-            if (types.indexOf('none') > -1) {
+            if (!this._useFade && !this._useScale && !this._useSlide) {
                 this._useTransition = false;
-            } else {
-                if (types.indexOf('fade') > -1) this._useFade = true;
-                if (types.indexOf('scale') > -1) this._useScale = true;
-                if (types.indexOf('slide') > -1) {this._useSlide = true; this._useFade = true;}
-
-                if (!this._useFade && !this._useScale && !this._useSlide) {
-                    this._useTransition = false;
-                }                
             }
-        },
+        }
+    },
 
-        _initialStyleSetup: function() {
+    _initialStyleSetup: function() {
 
-            /* because IE and FF shows the element's content before the element is initialized
-               as described here http://stackoverflow.com/questions/41619535/polymer-hidden-content-shows-up-for-a-second-upon-init
-               So we are forced to put a 'display: none' on this element wherever it is used
-               like this:
-               cat-text {
-                    display: none;
-               }
+        /* because IE and FF shows the element's content before the element is initialized
+           as described here http://stackoverflow.com/questions/41619535/polymer-hidden-content-shows-up-for-a-second-upon-init
+           So we are forced to put a 'display: none' on this element wherever it is used
+           like this:
+           cat-text {
+                display: none;
+           }
 
-               Below, after initialization, it is displayed:
-             */
-            this.style.display = 'inline-block';
+           Below, after initialization, it is displayed:
+         */
+        this.style.display = 'inline-block';
 
-            this.style.visibility = 'hidden';
+        this.style.visibility = 'hidden';
 
-            var entry = [], timing, name;
+        if (this._useFade) {
+            this.addAnimation('textAnimation', {
+                name: 'cat-fade-animation',
+                node: this,
+                fade: 'in',
+                duration: this.transitionDuration,
+                delay: this.transitionDelay,
+                reverseDuration: 0.5
+            });
+        }
+        if (this._useScale) {
+            this.addAnimation('textAnimation', {
+                name: 'cat-scale-animation',
+                node: this,
+                scale: 'up',
+                direction: this.transitionDirection,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
+                delay: this.transitionDelay,
+                reverse: false
+            });
+        }
+        if (this._useSlide) {
 
-            timing = {
-                duration: this.transitionDuration * 1000,
-                delay: this.transitionDelay * 1000,
-                easing: this.transitionFunction
-            };
+            this.addAnimation('textAnimation', {
+                name: 'cat-slide-animation',
+                node: this,
+                slide: 'in',
+                direction: this.transitionDirection,
+                offset: this.slideOffset,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
+                delay: this.transitionDelay,
+                reverse: false
+            });
 
-            if (this._useFade) {
-                entry.push({
-                    name: 'fade-in-animation',
-                    node: this,
-                    timing: timing
-                });
-            }
-            if (this._useScale) {
-                entry.push({
-                    name: 'cat-scale-up-animation',
-                    node: this,
-                    timing: timing,
-                    direction: this.transitionDirection
-                });
-            }
-            if (this._useSlide) {
-                if (this.transitionDirection === 'center') {
-                    this.transitionDirection = 'left';
-                }            
-                entry.push({
-                    name: 'cat-slide-in-animation',
-                    node: this,
-                    timing: timing,
-                    direction: this.transitionDirection,
-                    offset: this.slideOffset
-                });
-            }
-            
-            this.animationConfig.entry = entry;
-            
-        },
+        }
         
+    },
 
-        showText: function() {
-           
-            if (this._useTransition) {
-                if (!this.visibleOnLoad && !this.manualMode) {
-                    onVisibleOnce(this, this.slideOffset, function() {
-                        this.style.visibility = 'visible';
-                        this.cancelAnimation();
-                        this.playAnimation('entry');
-                    }, this);
-                } else {
-                    this.style.visibility = 'visible';
-                    this.cancelAnimation();
-                    this.playAnimation('entry');
-                }                
+    showText: function() {
+
+        if (this._useTransition) {
+            if (!this.visibleOnLoad && !this.manualMode) {
+                onVisibleOnce(this, function() {
+                    this.style.visibility = 'visible';                        
+                    this.play('textAnimation');
+                }, this, this.slideOffset);
             } else {
                 this.style.visibility = 'visible';
-                this.cancelAnimation();
-                this.playAnimation('entry');
-            }
-
-            /**
-             * Fired when the text is shown
-             *
-             * @event shown
-             */
-            this.fire('shown');
-        },
-
-        hideText: function() {
-
-            this.style.visibility = 'hidden';
-            
-            /**
-             * Fired when the text is hidden
-             *
-             * @event hidden
-             */
-            this.fire('hidden');
-        },
-
-        attached: function() {
-            this._errorHandling();        
-            this._transitionTypeHandling();            
-            this._initialStyleSetup();
-
-            if (!this.manualMode) {
-                this.showText();
-            }
+                this.play('textAnimation');
+            }                
+        } else {
+            this.style.visibility = 'visible';
+            this.play('textAnimation');
         }
-    });
 
+        /**
+         * Fired when the text is shown
+         *
+         * @event shown
+         */
+        this.fire('shown');
+    },
 
+    hideText: function() {
 
+        this.reverse('textAnimation');
 
-    // functions to check if an element is in the viewport
-    function isElementInViewport(el, offset) {       
-        var rect = el.getBoundingClientRect();
-        offset = offset ? offset : 0;
-        return (
-            rect.top >= -offset &&
-            rect.left >= -offset &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) +offset &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth) + offset
-        );
+        /**
+         * Fired when the text is hidden
+         *
+         * @event hidden
+         */
+        this.fire('hidden');
+    },
+
+    attached: function() {
+        this._errorHandling();        
+        this._transitionTypeHandling();            
+        this._initialStyleSetup();
+
+        if (!this.manualMode) {
+            this.showText();
+        }
     }
+});
 
-    function onVisibleOnce(el, offset, callback, scope) {
-        var visibilityCheck = function() {
-            if (isElementInViewport(el, offset)) {
-                callback.call(scope);
-                removeEventListener('DOMContentLoaded', visibilityCheck, false); 
-                removeEventListener('load', visibilityCheck, false); 
-                removeEventListener('scroll', visibilityCheck, false); 
-                removeEventListener('resize', visibilityCheck, false);
-            }
-        };
+})();
 
-        addEventListener('DOMContentLoaded', visibilityCheck, false); 
-        addEventListener('load', visibilityCheck, false); 
-        addEventListener('scroll', visibilityCheck, false); 
-        addEventListener('resize', visibilityCheck, false);
-
-        visibilityCheck();
-    }
-    //
-
-    })();
-
-    </script>
+</script>
 
 </dom-module>
