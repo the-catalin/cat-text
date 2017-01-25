@@ -37,9 +37,9 @@
         "id": "slideOffset",
         "type": "numeric-input",
         "min": 0,
-        "max": 500,
+        "max": 200,
         "step": 1,
-        "tip": "Available only for Transition type: slide"
+        "tip": "Percentage offset. Available only for Transition type: slide"
     }, {
         "name": "Visible on Load",
         "id": "visibleOnLoad",

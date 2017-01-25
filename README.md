@@ -6,7 +6,7 @@
 
 ## Demo
 
-## [DEMO with Config Panel](http://webcomponents.online/cat-text/)
+## [LIVE DEMO with Config Panel](http://webcomponents.online/cat-text/)
 
 ## Install
 
