@@ -23,7 +23,6 @@
   ],
   "dependencies": {
     "polymer": "^1.7.0",
-    "neon-animation": "PolymerElements/neon-animation#^1.2.4",
     "cat-animation": "the-catalin/cat-animation#^0.8.3",
     "cat-utils": "the-catalin/cat-utils#^0.8.0"
   },
