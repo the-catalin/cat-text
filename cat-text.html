@@ -41,7 +41,7 @@ var possibleFunctions = ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear']
 
 Polymer({
 
-    //private vars
+    //private vars - possible issues declared like this
     _useTransition : true,
     _useFade : false,
     _useScale : false,
@@ -50,39 +50,34 @@ Polymer({
 
     is: 'cat-text',
 
-    behaviors: [Polymer.CatAnimationRunnerBehavior],
+    behaviors: [CatBehaviors.CatAnimationRunnerBehavior],
 
     properties: {
-        animationConfig: {
-            value: function() {
-                return {};
-            }
-        },
         /**
          * Available options: fade, slide, scale (or combined, space delimited), none
          */
-        transitionType: {
+        textTransitionType: {
             type: String,
             value: 'scale'
         },
         /**
-         * Available options: center, left, right, top, bottom. 'center' is unavailable for transitionType: slide, 
+         * Available options: center, left, right, top, bottom. 'center' is unavailable for textTransitionType: slide
          */
-        transitionDirection: {
+        textTransitionDirection: {
             type: String,
             value: 'center'
         },
         /**
          * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
          */
-        transitionFunction: {
+        textTransitionFunction: {
             type: String,
             value: 'ease'
         },
         /**
          * Easing duration, in seconds
          */
-        transitionDuration: {
+        textTransitionDuration: {
             type: Number,
             value: 1
         },
@@ -94,7 +89,8 @@ Polymer({
             value: 0
         },
         /**
-         * Percentage offset. Available only for Transition type: slide
+         * Distance in percentage for slide effect.
+         * Available only for Transition type: slide
          */
         slideOffset: {
             type: Number,
@@ -123,16 +119,16 @@ Polymer({
     },
 
     _errorHandling: function() {
-        if (possibleFunctions.indexOf(this.transitionFunction) === -1) {
-            this.transitionFunction = 'ease';
+        if (possibleFunctions.indexOf(this.textTransitionFunction) === -1) {
+            this.textTransitionFunction = 'ease';
         }
-        if (possibleDirections.indexOf(this.transitionDirection) === -1) {
-            this.transitionDirection = 'center';
+        if (possibleDirections.indexOf(this.textTransitionDirection) === -1) {
+            this.textTransitionDirection = 'center';
         }
     },
 
     _transitionTypeHandling: function() {
-        var types = this.transitionType.split(' ');
+        var types = this.textTransitionType.split(' ');
         if (types.indexOf('none') > -1) {
             this._useTransition = false;
         } else {
@@ -167,7 +163,7 @@ Polymer({
                 name: 'cat-fade-animation',
                 node: this,
                 fade: 'in',
-                duration: this.transitionDuration,
+                duration: this.textTransitionDuration,
                 delay: this.transitionDelay,
                 reverseDuration: 0.5
             });
@@ -177,9 +173,9 @@ Polymer({
                 name: 'cat-scale-animation',
                 node: this,
                 scale: 'up',
-                direction: this.transitionDirection,
-                function: this.transitionFunction,
-                duration: this.transitionDuration,
+                direction: this.textTransitionDirection,
+                function: this.textTransitionFunction,
+                duration: this.textTransitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });
@@ -190,10 +186,10 @@ Polymer({
                 name: 'cat-slide-animation',
                 node: this,
                 slide: 'in',
-                direction: this.transitionDirection,
+                direction: this.textTransitionDirection,
                 offset: this.slideOffset,
-                function: this.transitionFunction,
-                duration: this.transitionDuration,
+                function: this.textTransitionFunction,
+                duration: this.textTransitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });

@@ -5,22 +5,22 @@
     
     "controls": [{
         "name": "Transition Type",
-        "id": "transitionType",
+        "id": "textTransitionType",
         "type": "dropdown",
         "options": ["fade", "scale", "slide", "none"]
     }, {
         "name": "Transition Direction",
-        "id": "transitionDirection",
+        "id": "textTransitionDirection",
         "type": "dropdown",
         "options": ["center", "left", "right", "top", "bottom"]
     }, {
         "name": "Transition Function",
-        "id": "transitionFunction",
+        "id": "textTransitionFunction",
         "type": "dropdown",
         "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"]
     }, {
         "name": "Transition Duration",
-        "id": "transitionDuration",
+        "id": "textTransitionDuration",
         "type": "numeric-input",
         "min": 0,
         "max": 5,
@@ -57,11 +57,11 @@
     "type": "genericContent"
 }, {
     "limits" : [{
-        "master": "transitionType",
-        "slave": ["transitionDirection"],
+        "master": "textTransitionType",
+        "slave": ["textTransitionDirection"],
         "disabled": ["fade"]
     }, {
-        "master": "transitionType",
+        "master": "textTransitionType",
         "slave": ["slideOffset"],
         "disabled": ["fade", "scale"]
     }]

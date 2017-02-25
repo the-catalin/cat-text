@@ -1,6 +1,6 @@
 {
   "name": "cat-text",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Displays text with a transition effect",
   "authors": [
     "Catalin Ungureanu <catalinungureanu@gmail.com>"
@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "polymer": "^1.7.0",
-    "cat-animation": "the-catalin/cat-animation#^0.8.3",
+    "cat-animation": "the-catalin/cat-animation#^0.8.5",
     "cat-utils": "the-catalin/cat-utils#^0.8.0"
   },
   "devDependencies": {
