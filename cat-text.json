@@ -3,54 +3,136 @@
     "iconClass": "fa fa-gear",
     "type": "controlsWithSubtabs",
     
-    "controls": [{
-        "name": "Transition Type",
-        "id": "textTransitionType",
-        "type": "dropdown",
-        "options": ["fade", "scale", "slide", "none"]
+    "subtabs": [{
+        "subtabName": "Animation",
+        "controls": [{
+            "name": "Transition Type",
+            "id": "textTransitionType",
+            "type": "dropdown",
+            "options": ["fade", "scale", "slide", "none"]
+        }, {
+            "name": "Transition Direction",
+            "id": "textTransitionDirection",
+            "type": "dropdown",
+            "options": ["center", "left", "right", "top", "bottom"]
+        }, {
+            "name": "Transition Function",
+            "id": "textTransitionFunction",
+            "type": "dropdown",
+            "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"]
+        }, {
+            "name": "Transition Duration",
+            "id": "textTransitionDuration",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 5,
+            "step": 0.1
+        }, {
+            "name": "Transition Delay",
+            "id": "transitionDelay",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 10,
+            "step": 0.1
+        }, {
+            "name": "Slide Offset",
+            "id": "slideOffset",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "tip": "Percentage offset. Available only for Transition type: slide"
+        }]
     }, {
-        "name": "Transition Direction",
-        "id": "textTransitionDirection",
-        "type": "dropdown",
-        "options": ["center", "left", "right", "top", "bottom"]
+        "subtabName": "Global",
+        "controls": [{
+            "name": "Visible on Load",
+            "id": "visibleOnLoad",
+            "type": "toggle",
+            "tip": "By default the text will appear only when it is in the viewport (visible area). If you don't want this, check to make it visible on load"
+        }, {
+            "name": "Manual Mode",
+            "id": "manualMode",
+            "type": "toggle",
+            "tip": "(Advanced) Enable this if you want to manually control when cat-text is shown or hidden"
+        }, {
+            "name": "Background Color",
+            "id": "backgroundColor",
+            "type": "color",
+            "css": "cat-text"
+        }, {
+            "name": "Padding",
+            "id": "padding",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "css": "cat-text"
+        }]
     }, {
-        "name": "Transition Function",
-        "id": "textTransitionFunction",
-        "type": "dropdown",
-        "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"]
+        "subtabName": "Border",
+        "controls": [{
+            "name": "Border Radius",
+            "id": "borderRadius",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "css": "cat-text"
+        }, {
+            "name": "Border Style",
+            "id": "borderStyle",
+            "type": "dropdown",
+            "options": ["none", "solid", "dotted", "dashed"],
+            "css": "cat-text"
+        }, {
+            "name": "Border Width",
+            "id": "borderWidth",
+            "type": "numeric-input",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "css": "cat-text"
+        }, {
+            "name": "Border Color",
+            "id": "borderColor",
+            "type": "color",
+            "css": "cat-text"
+        }]
     }, {
-        "name": "Transition Duration",
-        "id": "textTransitionDuration",
-        "type": "numeric-input",
-        "min": 0,
-        "max": 5,
-        "step": 0.1
-    }, {
-        "name": "Transition Delay",
-        "id": "transitionDelay",
-        "type": "numeric-input",
-        "min": 0,
-        "max": 10,
-        "step": 0.1
-    }, {
-        "name": "Slide Offset",
-        "id": "slideOffset",
-        "type": "numeric-input",
-        "min": 0,
-        "max": 200,
-        "step": 1,
-        "tip": "Percentage offset. Available only for Transition type: slide"
-    }, {
-        "name": "Visible on Load",
-        "id": "visibleOnLoad",
-        "type": "toggle",
-        "tip": "By default the text will appear only when it is in the viewport (visible area). If you don't want this, check to make it visible on load"
-    }, {
-        "name": "Manual Mode",
-        "id": "manualMode",
-        "type": "toggle",
-        "tip": "(Advanced) Enable this if you want to manually control when cat-text is shown or hidden"
+        "subtabName": "Font",
+        "controls": [{
+            "name": "Font Size",
+            "id": "fontSize",
+            "type": "numeric-input",
+            "min": 8,
+            "max": 50,
+            "step": 1,
+            "css": "cat-text"
+        }, {
+            "name": "Color",
+            "id": "color",
+            "type": "color",
+            "css": "cat-text"
+        }, {
+            "name": "Font Family",
+            "id": "fontFamily",
+            "type": "dropdown",
+            "options": ["Open Sans", "Lato", "Raleway", "Roboto", "Oswald", "Roboto Condensed", "PT Sans", "Baloo", "Open Sans Condensed", "Indie Flower", "Abel"],
+            "tip": "Note that some fonts go only with specific font weights",
+            "css": "cat-text"
+        }, {
+            "name": "Font Weight",
+            "id": "fontWeight",
+            "type": "numeric-input",
+            "min": 100,
+            "max": 900,
+            "step": 100,
+            "css": "cat-text"
+        }]
     }]
+
+    
 }, {
     "tabName": "Publish",
     "iconClass": "fa fa-paper-plane",

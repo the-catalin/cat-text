@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>cat-text test</title>
+	<title>cat-text with config panel</title>
 
 	<script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
 
@@ -11,38 +11,34 @@
 	<style>	    
 	    cat-text {
 	    	display: none;
-	    	background-color: rgba(150,190,200,1);
-	    	border-radius: 4px;
-            padding: 10px;
-	    	font-family: 'Open Sans';
-	    	font-size:24px;
-	    	margin: 30px;
+			margin: 30px;
 	    }
 		
 	</style>
 
 </head>
 <body>
-<!-- 	<cat-text
-		transition-type="slide"
-		slide-offset="180"
-		transition-direction="left"
-		transition-duration="2"
-		transition-delay="0"
-		>Sample text
-	</cat-text> -->
-		<!-- visible-on-load
-		manually-triggered -->
 	
 	<cat-config-panel source-file="../cat-text.json"></cat-config-panel>
 
 	<script src="../../cat-config-panel/connecter.js"></script>
 
 	<script>
-		var componentString = '<cat-text>This is a sample text</cat-text>';
-			componentName = 'cat-text';
+		var componentName = 'cat-text',
+			styleObj = {
+				'cat-text': {
+					backgroundColor: 'rgba(61,148,176,1)',
+					color: 'rgba(255,255,255,1)',
+					borderRadius: 4,
+					padding: 10,
+					fontFamily: 'Open Sans',
+					fontWeight: 300,
+					fontSize: 24
+				}
+			},
+			componentString = '<cat-text>This is a sample text</cat-text>';
 
-		connectComponentWithConfigPanel(componentName, componentString);
+		connectComponentWithConfigPanel(componentName, styleObj, componentString);
 	</script>
 </body>
 </html>
