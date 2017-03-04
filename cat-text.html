@@ -61,7 +61,7 @@ Polymer({
             value: 'scale'
         },
         /**
-         * Available options: center, left, right, top, bottom. 'center' is unavailable for textTransitionType: slide
+         * Available options: center, left, right, top, bottom, random. 'center' is unavailable for textTransitionType: slide
          */
         textTransitionDirection: {
             type: String,
@@ -116,16 +116,7 @@ Polymer({
     listeners: {
         'show': 'showText',
         'hide': 'hideText'
-    },
-
-    _errorHandling: function() {
-        if (possibleFunctions.indexOf(this.textTransitionFunction) === -1) {
-            this.textTransitionFunction = 'ease';
-        }
-        if (possibleDirections.indexOf(this.textTransitionDirection) === -1) {
-            this.textTransitionDirection = 'center';
-        }
-    },
+    },    
 
     _transitionTypeHandling: function() {
         var types = this.textTransitionType.split(' ');
@@ -236,8 +227,7 @@ Polymer({
     },
 
     attached: function() {
-        this._errorHandling();        
-        this._transitionTypeHandling();            
+        this._transitionTypeHandling();
         this._initialStyleSetup();
 
         if (!this.manualMode) {

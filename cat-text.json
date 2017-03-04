@@ -14,7 +14,7 @@
             "name": "Transition Direction",
             "id": "textTransitionDirection",
             "type": "dropdown",
-            "options": ["center", "left", "right", "top", "bottom"]
+            "options": ["center", "left", "right", "top", "bottom", "random"]
         }, {
             "name": "Transition Function",
             "id": "textTransitionFunction",
