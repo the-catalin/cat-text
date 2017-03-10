@@ -8,10 +8,17 @@
 	<link rel="import" href="../cat-text.html">
 	<link rel="import" href="../../cat-config-panel/cat-config-panel.html">
 
-	<style>	    
+	<style>
+		body {
+			text-align: center;
+		}   
 	    cat-text {
 	    	display: none;
-			margin: 30px;
+			margin: 30px auto;
+	    }
+
+	    cat-config-panel {
+	    	text-align: left;
 	    }
 		
 	</style>
@@ -24,11 +31,16 @@
 	<script src="../../cat-config-panel/connecter.js"></script>
 
 	<script>
-		var componentName = 'cat-text',
+		var includes =
+			'<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>\n' + 
+			'<link rel="import" href="bower_components/cat-text/cat-text.html">\n',
+
+			componentName = 'cat-text',
+			
 			styleObj = {
 				'cat-text': {
-					backgroundColor: 'rgba(61,148,176,1)',
-					color: 'rgba(255,255,255,1)',
+					backgroundColor: 'rgba(61, 148, 176, 1)',
+					color: 'rgba(255, 255, 255, 1)',
 					borderRadius: 4,
 					padding: 10,
 					fontFamily: 'Open Sans',
@@ -36,9 +48,10 @@
 					fontSize: 24
 				}
 			},
+			
 			componentString = '<cat-text>This is a sample text</cat-text>';
 
-		connectComponentWithConfigPanel(componentName, styleObj, componentString);
+		connectComponentWithConfigPanel(componentName, styleObj, componentString, includes);
 	</script>
 </body>
 </html>

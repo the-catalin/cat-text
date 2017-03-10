@@ -136,7 +136,7 @@
 }, {
     "tabName": "Publish",
     "iconClass": "fa fa-paper-plane",
-    "type": "genericContent"
+    "type": "genericContent",
 }, {
     "limits" : [{
         "master": "textTransitionType",
