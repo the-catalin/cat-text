@@ -56,28 +56,28 @@ Polymer({
         /**
          * Available options: fade, slide, scale (or combined, space delimited), none
          */
-        textTransitionType: {
+        transitionType: {
             type: String,
             value: 'scale'
         },
         /**
-         * Available options: center, left, right, top, bottom, random. 'center' is unavailable for textTransitionType: slide
+         * Available options: center, left, right, top, bottom, random. 'center' is unavailable for transitionType: slide
          */
-        textTransitionDirection: {
+        transitionDirection: {
             type: String,
             value: 'center'
         },
         /**
          * Easing function. Available options: ease, linear, ease-in, ease-out, ease-in-out
          */
-        textTransitionFunction: {
+        transitionFunction: {
             type: String,
             value: 'ease'
         },
         /**
          * Easing duration, in seconds
          */
-        textTransitionDuration: {
+        transitionDuration: {
             type: Number,
             value: 1
         },
@@ -119,7 +119,7 @@ Polymer({
     },    
 
     _transitionTypeHandling: function() {
-        var types = this.textTransitionType.split(' ');
+        var types = this.transitionType.split(' ');
         if (types.indexOf('none') > -1) {
             this._useTransition = false;
         } else {
@@ -154,7 +154,7 @@ Polymer({
                 name: 'cat-fade-animation',
                 node: this,
                 fade: 'in',
-                duration: this.textTransitionDuration,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverseDuration: 0.5
             });
@@ -164,9 +164,9 @@ Polymer({
                 name: 'cat-scale-animation',
                 node: this,
                 scale: 'up',
-                direction: this.textTransitionDirection,
-                function: this.textTransitionFunction,
-                duration: this.textTransitionDuration,
+                direction: this.transitionDirection,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });
@@ -177,10 +177,10 @@ Polymer({
                 name: 'cat-slide-animation',
                 node: this,
                 slide: 'in',
-                direction: this.textTransitionDirection,
+                direction: this.transitionDirection,
                 offset: this.slideOffset,
-                function: this.textTransitionFunction,
-                duration: this.textTransitionDuration,
+                function: this.transitionFunction,
+                duration: this.transitionDuration,
                 delay: this.transitionDelay,
                 reverse: false
             });

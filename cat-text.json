@@ -7,22 +7,22 @@
         "subtabName": "Animation",
         "controls": [{
             "name": "Transition Type",
-            "id": "textTransitionType",
+            "id": "transitionType",
             "type": "dropdown",
             "options": ["fade", "scale", "slide", "none"]
         }, {
             "name": "Transition Direction",
-            "id": "textTransitionDirection",
+            "id": "transitionDirection",
             "type": "dropdown",
             "options": ["center", "left", "right", "top", "bottom", "random"]
         }, {
             "name": "Transition Function",
-            "id": "textTransitionFunction",
+            "id": "transitionFunction",
             "type": "dropdown",
             "options": ["ease", "linear", "ease-in", "ease-out", "ease-in-out"]
         }, {
             "name": "Transition Duration",
-            "id": "textTransitionDuration",
+            "id": "transitionDuration",
             "type": "numeric-input",
             "min": 0,
             "max": 5,
@@ -140,11 +140,11 @@
     "content": "content"
 }, {
     "limits" : [{
-        "master": "textTransitionType",
-        "slave": ["textTransitionDirection"],
+        "master": "transitionType",
+        "slave": ["transitionDirection"],
         "disabled": ["fade"]
     }, {
-        "master": "textTransitionType",
+        "master": "transitionType",
         "slave": ["slideOffset"],
         "disabled": ["fade", "scale"]
     }]
